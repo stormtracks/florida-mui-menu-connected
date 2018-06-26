@@ -8,10 +8,17 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+
+import { Route } from "react-router";
 import { Link } from "react-router-dom";
-import withRoot from "./../withRoot";
-import compose from 'recompose/compose';
 import { connect } from "react-redux";
+
+import compose from "recompose/compose";
+
+import withRoot from "./../withRoot";
+import Home from "../components/Home";
+import Admin from "./Admin";
+import ShowTheLocation from "./../components/ShowTheLocation";
 
 const styles = {
   root: {
@@ -56,8 +63,10 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, selectedKey } = this.props;
     const { anchorEl1, anchorEl2 } = this.state;
+
+    console.log("selectedKey = ", selectedKey);
 
     return (
       <div className={classes.root}>
@@ -100,17 +109,26 @@ class MenuAppBar extends React.Component {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose}>
-                  <Link className={classes.link} to="/ch1/sec1">
+                  <Link
+                    className={classes.link}
+                    to={{ pathname: `/${selectedKey}/sec1` }}
+                  >
                     Sec 1
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose}>
-                  <Link className={classes.link} to="/ch1/sec2">
+                  <Link
+                    className={classes.link}
+                    to={{ pathname: `/${selectedKey}/sec2` }}
+                  >
                     Sec 2
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose}>
-                  <Link className={classes.link} to="/ch1/sec3">
+                  <Link
+                    className={classes.link}
+                    to={{ pathname: `/${selectedKey}/sec3` }}
+                  >
                     Sec 3
                   </Link>
                 </MenuItem>
@@ -151,6 +169,14 @@ class MenuAppBar extends React.Component {
           </Toolbar>
         </AppBar>
 
+        <div>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/admin" component={Admin} />
+
+          <Route path={`/${selectedKey}/sec1`} component={ShowTheLocation} />
+          <Route path={`/${selectedKey}/sec2`} component={ShowTheLocation} />
+          <Route path={`/${selectedKey}/sec3`} component={ShowTheLocation} />
+        </div>
       </div>
     );
   }
@@ -183,10 +209,11 @@ export default compose(
 */
 
 const part = compose(
-    withStyles(styles, {
-      name: 'MenuAppBar',
-    }),
-    connect(mapStateToProps))(MenuAppBar);
+  withStyles(styles, {
+    name: "MenuAppBar"
+  }),
+  connect(mapStateToProps)
+)(MenuAppBar);
 
 export default withRoot(part);
 
